@@ -1,2 +1,2 @@
 # generative_agents_cn
-本项目是对斯坦福大学generative_agents项目的简中翻译，仅用于学习使用(only for learning)
+本项目是对斯坦福大学generative_agents项目的简中翻译，仅用于学习使用(only for learning), 如有错误，烦请Issues提醒
