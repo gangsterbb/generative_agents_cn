@@ -5,6 +5,11 @@ File: maze.py
 Description: Defines the Maze class, which represents the map of the simulated
 world in a 2-dimensional matrix. 
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+文件：maze.py
+描述：定义Maze 类，它以二维矩阵表示模拟世界的地图
+"""
 import json
 import numpy
 import datetime
@@ -18,19 +23,32 @@ from utils import *
 class Maze: 
   def __init__(self, maze_name): 
     # READING IN THE BASIC META INFORMATION ABOUT THE MAP
+    
+    # 读取地图的基本元信息
     self.maze_name = maze_name
     # Reading in the meta information about the world. If you want tp see the
     # example variables, check out the maze_meta_info.json file. 
+    
+    # 读取地图的基本元信息，如果你想看示例变量，你可以查看maze_meta_info.json文件
     meta_info = json.load(open(f"{env_matrix}/maze_meta_info.json"))
     # <maze_width> and <maze_height> denote the number of tiles make up the 
     # height and width of the map. 
+
+    # <maze_width>和<maze_height>分别表示构成地图的宽和长的地图块数目
+    # 译注：一张大地图是由一小块一小块地图拼接起来的，tile 本意是瓷砖
     self.maze_width = int(meta_info["maze_width"])
     self.maze_height = int(meta_info["maze_height"])
     # <sq_tile_size> denotes the pixel height/width of a tile. 
+
+    # <sq_tile_size> 表示一个地图块(瓷砖)的像素高度/宽度
+    # 译注：地图块是正方形，这里是指正方形的边长
     self.sq_tile_size = int(meta_info["sq_tile_size"])
     # <special_constraint> is a string description of any relevant special 
     # constraints the world might have. 
     # e.g., "planning to stay at home all day and never go out of her home"
+
+    # <special_constraint>是对仿真世界中可能有的任何相关特殊限制的字符串描述。
+    # 例如，“计划整天呆在家里，不出门”
     self.special_constraint = meta_info["special_constraint"]
 
     # READING IN SPECIAL BLOCKS
@@ -45,6 +63,15 @@ class Maze:
     # Tiled export. Then we basically have the block path: 
     # World, Sector, Arena, Game Object -- again, these paths need to be 
     # unique within an instance of Reverie. 
+
+    # 读取特殊区块。特殊区块是在地图中被染色的那些区块。
+    # arena 块文件示例如下：
+    # "25335, Double Studio, Studio, Common Room"
+    # 另一个游戏对象块文件示例如下：
+    # "25331, Double Studio, Studio, Bedroom 2, Painting"
+    # 注意，第一个元素是来自Tiled导出的颜色标记数字。
+    # 然后，我们基本上有块路径：世界、区域、竞技场、游戏对象
+    # 同样，这些路径在同一个Reverie的实例中必须是唯一的。
     blocks_folder = f"{env_matrix}/special_blocks"
 
     _wb = blocks_folder + "/world_blocks.csv"
@@ -74,6 +101,9 @@ class Maze:
     # [SECTION 3] Reading in the matrices 
     # This is your typical two dimensional matrices. It's made up of 0s and 
     # the number that represents the color block from the blocks folder. 
+
+    # 第三节 读取矩阵
+    # 这是典型的二维矩阵。它由0和一个数字组成，这个数字代表来自块文件夹的某个颜色块。
     maze_folder = f"{env_matrix}/maze"
 
     _cm = maze_folder + "/collision_maze.csv"
@@ -96,6 +126,12 @@ class Maze:
     # identical (e.g., 70 x 40).
     # example format: [['0', '0', ... '25309', '0',...], ['0',...]...]
     # 25309 is the collision bar number right now.
+    
+    # 加载地图。地图直接从Tile导出的json文件中获取，地图以csv格式表示。
+    # 并且，地图不是二维矩阵格式，而是单行矩阵，长度为地图的长*宽。所以这里需要进行转换
+    # 我们可以一次完成转换，因为所有的矩阵维数是相同的（例如， 70 * 40）
+    # 示例： [['0', '0', ... '25309', '0',...], ['0',...]...]
+    # 这里25309是碰撞块的编号。
     self.collision_maze = []
     sector_maze = []
     arena_maze = []

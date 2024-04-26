@@ -4,6 +4,11 @@ Author: Joon Sung Park (joonspk@stanford.edu)
 File: compress_sim_storage.py
 Description: Compresses a simulation for replay demos. 
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+文件：compress_sim_storage.py
+描述：压缩仿真，在重放demo时使用
+"""
 import shutil
 import json
 from global_methods import *
