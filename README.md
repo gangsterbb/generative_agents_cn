@@ -136,29 +136,44 @@ There are two ways to optionally customize your simulations.
 ### Author and Load Agent History 作者和加载代理历史记录
 First is to initialize agents with unique history at the start of the simulation. To do this, you would want to 1) start your simulation using one of the base simulations, and 2) author and load agent history. More specifically, here are the steps:
 
-首先是在仿真的开始阶段去初始化带有唯一历史记录的代理。要做到这点，你需要（1）使用一个基础仿真去开启仿真
+首先是在仿真的开始阶段去初始化带有唯一历史记录的代理。要做到这点，你需要（1）使用一个基础仿真去开启仿真，（2）作者和加载代理历史，下面是更细致的步骤：
 
-#### Step 1. Starting Up a Base Simulation 
+#### Step 1. Starting Up a Base Simulation 开启一个基础仿真
 There are two base simulations included in the repository: `base_the_ville_n25` with 25 agents, and `base_the_ville_isabella_maria_klaus` with 3 agents. Load one of the base simulations by following the steps until step 2 above. 
 
-#### Step 2. Loading a History File 
+在仓库中有两个基础仿真：`base_the_ville_n25`有25个代理，`base_the_ville_isabella_maria_klaus`有3个代理。通过接下来的步骤加载其中一个基础仿真。
+
+#### Step 2. Loading a History File 加载一个历史文件
 Then, when prompted with "Enter option: ", you should load the agent history by responding with the following command:
 
+然后，当终端提示：”Enter option: “，你要通过下面的命令来加载代理历史：
+
     call -- load history the_ville/<history_file_name>.csv
+
 Note that you will need to replace `<history_file_name>` with the name of an existing history file. There are two history files included in the repo as examples: `agent_history_init_n25.csv` for `base_the_ville_n25` and `agent_history_init_n3.csv` for `base_the_ville_isabella_maria_klaus`. These files include semicolon-separated lists of memory records for each of the agents—loading them will insert the memory records into the agents' memory stream.
 
-#### Step 3. Further Customization 
+你需要把 `<history_file_name>` 替换成一个存在的历史文件。在仓库里面有两个历史文件作为例子：给`base_the_ville_n25`的`agent_history_init_n25.csv`以及给`base_the_ville_isabella_maria_klaus`的`agent_history_init_n3.csv`。
+
+
+#### Step 3. Further Customization 更多自定义选项
 To customize the initialization by authoring your own history file, place your file in the following folder: `environment/frontend_server/static_dirs/assets/the_ville`. The column format for your custom history file will have to match the example history files included. Therefore, we recommend starting the process by copying and pasting the ones that are already in the repository.
 
-### Create New Base Simulations
+要通过编写自己的历史文件来自定义初始化，请将文件放在以下文件夹中：`environment/frontend_server/static_dirs/assets/the_ville`。自定义历史记录文件的列格式必须与包含的示例历史记录文件相匹配。因此，我们建议通过复制和粘贴存储库中已经存在的文件来启动该过程。
+
+### Create New Base Simulations 创建新的基础仿真
 For a more involved customization, you will need to author your own base simulation files. The most straightforward approach would be to copy and paste an existing base simulation folder, renaming and editing it according to your requirements. This process will be simpler if you decide to keep the agent names unchanged. However, if you wish to change their names or increase the number of agents that the Smallville map can accommodate, you might need to directly edit the map using the [Tiled](https://www.mapeditor.org/) map editor.
 
+对于更复杂的自定义，你需要自己编写一个基础仿真。最直接的方法是复制一个已经存在的基础仿真文件夹，并根据你的要求重命名和修改它。但是，如果你想要修改他们的名字或者增加
+斯坦福小镇地图能容纳的代理数量，你需要用[Tiled](https://www.mapeditor.org/)地图编辑器来更改地图。
 
-## <img src="https://joonsungpark.s3.amazonaws.com:443/static/assets/characters/profile/Eddy_Lin.png" alt="Generative Eddy">   Authors and Citation 
+## <img src="https://joonsungpark.s3.amazonaws.com:443/static/assets/characters/profile/Eddy_Lin.png" alt="Generative Eddy">   Authors and Citation 作者和引用
 
 **Authors:** Joon Sung Park, Joseph C. O'Brien, Carrie J. Cai, Meredith Ringel Morris, Percy Liang, Michael S. Bernstein
 
 Please cite our paper if you use the code or data in this repository. 
+
+如果你使用了这个仓库的代码或数据，请按以下格式引用我们的论文。
+
 ```
 @inproceedings{Park2023GenerativeAgents,  
 author = {Park, Joon Sung and O'Brien, Joseph C. and Cai, Carrie J. and Morris, Meredith Ringel and Liang, Percy and Bernstein, Michael S.},  
@@ -173,13 +188,16 @@ series = {UIST '23}
 }
 ```
 
-## <img src="https://joonsungpark.s3.amazonaws.com:443/static/assets/characters/profile/Wolfgang_Schulz.png" alt="Generative Wolfgang">   Acknowledgements
+## <img src="https://joonsungpark.s3.amazonaws.com:443/static/assets/characters/profile/Wolfgang_Schulz.png" alt="Generative Wolfgang">   Acknowledgements 鸣谢
 
 We encourage you to support the following three amazing artists who have designed the game assets for this project, especially if you are planning to use the assets included here for your own project: 
+
+我们希望你们能关注下面三位出色的画家，尤其是当你想在你的项目中使用这些素材时，他们为这个项目画了游戏素材。
+
 * Background art: [PixyMoon (@_PixyMoon\_)](https://twitter.com/_PixyMoon_)
 * Furniture/interior design: [LimeZu (@lime_px)](https://twitter.com/lime_px)
 * Character design: [ぴぽ (@pipohi)](https://twitter.com/pipohi)
 
 In addition, we thank Lindsay Popowski, Philip Guo, Michael Terry, and the Center for Advanced Study in the Behavioral Sciences (CASBS) community for their insights, discussions, and support. Lastly, all locations featured in Smallville are inspired by real-world locations that Joon has frequented as an undergraduate and graduate student---he thanks everyone there for feeding and supporting him all these years.
 
-
+此外，我们感谢Lindsay Popowski、Philip Guo、Michael Terry和行为科学高级研究中心（CASBS）社区的见解、讨论和支持。最后，Smallville的所有景点都受到了Joon在读本科生和研究生时经常光顾的现实世界景点的启发——他感谢那里的每一个人这些年来为他提供食物和支持。
