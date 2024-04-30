@@ -5,6 +5,11 @@ File: path_finder.py
 Description: Implements various path finding functions for generative agents.
 Some of the functions are defunct. 
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+文件：path_finder.py
+描述：各种路径查找的函数。部分函数已失效。
+"""
 import numpy as np
 
 def print_maze(maze):
@@ -39,10 +44,13 @@ def path_finder_v1(maze, start, end, collision_block_char, verbose=False):
     path = []
     # We use a Python list as a stack - then we have push operations as
     # append, and pop as pop.
+    # 把python列表当做栈使用，append作为插入，pop作为弹出
     stack = []
     # Add the entry point (as a tuple)
+    # 添加入口点（作为元组）
     stack.append(start)
     # Go through the stack as long as there are elements
+    # 栈内有元素时遍历栈
     while len(stack) > 0:
       pos_r, pos_c = stack.pop()
       if verbose: 
@@ -52,11 +60,14 @@ def path_finder_v1(maze, start, end, collision_block_char, verbose=False):
         return path
       if maze[pos_r][pos_c] == 'X':
         # Already visited
+        # 已经访问过
         continue
       # Mark position as visited
+      # 把该位置标记为已访问
       maze[pos_r][pos_c] = 'X'
       path += [(pos_r, pos_c)]
       # Check for all possible positions and add if possible
+      # 查找所有可能移动到的位置并添加该位置至栈中
       if is_valid_position(maze, pos_r - 1, pos_c):
         stack.append((pos_r - 1, pos_c))
       if is_valid_position(maze, pos_r + 1, pos_c):
@@ -67,14 +78,17 @@ def path_finder_v1(maze, start, end, collision_block_char, verbose=False):
         stack.append((pos_r, pos_c + 1))
 
       # To follow the maze
+      # 跟随迷宫
       if verbose: 
         print('Stack:' , stack)
         print_maze(maze)
 
     # We didn't find a path, hence we do not need to return the path
+    # 找不到合适的路径，所以不用返回路径，返回False
     return False
 
   # clean maze
+  # 清除迷宫
   new_maze = []
   for row in maze: 
     new_row = []
@@ -163,6 +177,7 @@ def path_finder_v2(a, start, end, collision_block_char, verbose=False):
 
 def path_finder(maze, start, end, collision_block_char, verbose=False):
   # EMERGENCY PATCH
+  # 紧急补丁
   start = (start[1], start[0])
   end = (end[1], end[0])
   # END EMERGENCY PATCH

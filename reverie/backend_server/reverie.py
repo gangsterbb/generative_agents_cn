@@ -18,6 +18,19 @@ term "personas" to refer to generative agents, "associative memory" to refer
 to the memory stream, and "reverie" to refer to the overarching simulation 
 framework.
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+
+文件: reverie.py
+描述：这个文件定义了ReverieServer类，是运行生成代理仿真的主程序。ReverieServer类
+保存和记录着所有跟仿真有关的状态。仿真的主要互动模式应该通过执行open_server函数
+该函数使模拟器能够输入命令行提示来运行和保存仿真等任务。
+
+版本提示 (June 14, 2023) -- Reverie中实现了我的论文《Generative Agents: Interactive
+Simulacra of Human Behavior》 描述的核心的仿真工作。如果你在阅读文章后读这些内容，你可能
+会注意到我使用较旧的术语来描述生成代理及其认知模块。最主要的是，我用"personas"代表生成的
+代理，"associative memory"代表记忆流，还有"reverie"代表整体的模拟框架。
+"""
 import json
 import numpy
 import datetime
@@ -47,12 +60,20 @@ class ReverieServer:
     # <fork_sim_code> indicates the simulation we are forking from. 
     # Interestingly, all simulations must be forked from some initial 
     # simulation, where the first simulation is "hand-crafted".
+    
+    # 从先前的仿真分支：
+    # <fork_sim_code> 表示我们要分叉的模拟。有趣的是，所有仿真都必须从一些
+    # 初始的仿真生成分支。其中第一个仿真是"手动制作的"。
+     
     self.fork_sim_code = fork_sim_code
     fork_folder = f"{fs_storage}/{self.fork_sim_code}"
 
     # <sim_code> indicates our current simulation. The first step here is to 
     # copy everything that's in <fork_sim_code>, but edit its 
     # reverie/meta/json's fork variable. 
+
+    # <sim_code> 表示我们当前的仿真。第一步是复制<fork_sim_code>中所有内容，但要
+    # 修改reverie/meta/json的分叉变量。
     self.sim_code = sim_code
     sim_folder = f"{fs_storage}/{self.sim_code}"
     copyanything(fork_folder, sim_folder)
@@ -71,16 +92,27 @@ class ReverieServer:
     # change. It takes a string date in the following example form: 
     # "June 25, 2022"
     # e.g., ...strptime(June 25, 2022, "%B %d, %Y")
+    
+    # 加载REVERIE全局变量
+    # Reverie的开启日期：<start_datetime>是Reverie实例的开启日期。一旦它被初始化了
+    # 它就不应该被修改。它接收如下字符串格式的日期：
+    # "June 25, 2022"
+    # 例子： ...strptime(June 25, 2022, "%B %d, %Y")
     self.start_time = datetime.datetime.strptime(
                         f"{reverie_meta['start_date']}, 00:00:00",  
                         "%B %d, %Y, %H:%M:%S")
     # <curr_time> is the datetime instance that indicates the game's current
     # time. This gets incremented by <sec_per_step> amount everytime the world
     # progresses (that is, everytime curr_env_file is recieved). 
+
+    # <curr_time> 是代表游戏当前时间的日期实例。它只在游戏世界步进时（也就是说，每次
+    # curr_env_file被接收时）增加<sec_per_step>这么多的值
     self.curr_time = datetime.datetime.strptime(reverie_meta['curr_time'], 
                                                 "%B %d, %Y, %H:%M:%S")
     # <sec_per_step> denotes the number of seconds in game time that each 
     # step moves foward. 
+
+    # <sec_per_step>说明了在游戏世界中每一步前进时游戏时间的实际秒数
     self.sec_per_step = reverie_meta['sec_per_step']
     
     # <maze> is the main Maze instance. Note that we pass in the maze_name
