@@ -160,6 +160,20 @@ class Maze:
     #         'collision': False,
     #         'events': {('double studio:double studio:bedroom 2:bed',
     #                    None, None)}} 
+
+    # 迷宫中完成加载后，现在设置self.tiles。这是一个按行：列访问的矩阵，每个访问点
+    # 都是一个包含在该方块中发生的所有事情的字典。更具体地说，它包含有关其"世界"、
+    # "区域"、"竞技场"、"游戏"、"对象" 生成位置"的信息，以及它是否是碰撞方块。
+    # 以及在其中发生的所有事件的集合。
+    # 例子， self.tiles[32][59] = {'world': 'double studio', 
+    #            'sector': '', 'arena': '', 'game_object': '', 
+    #            'spawning_location': '', 'collision': False, 'events': set()}
+    # 例子， self.tiles[9][58] = {'world': 'double studio', 
+    #         'sector': 'double studio', 'arena': 'bedroom 2', 
+    #         'game_object': 'bed', 'spawning_location': 'bedroom-2-a', 
+    #         'collision': False,
+    #         'events': {('double studio:double studio:bedroom 2:bed',
+    #                    None, None)}} 
     self.tiles = []
     for i in range(self.maze_height): 
       row = []
@@ -193,6 +207,7 @@ class Maze:
       self.tiles += [row]
     # Each game object occupies an event in the tile. We are setting up the 
     # default event value here. 
+    # 每个游戏对象都占了图块的一个事件，这里设置默认事件值。
     for i in range(self.maze_height):
       for j in range(self.maze_width): 
         if self.tiles[i][j]["game_object"]:
@@ -211,6 +226,14 @@ class Maze:
     # self.address_tiles['<spawn_loc>bedroom-2-a'] == {(58, 9)}
     # self.address_tiles['double studio:recreation:pool table'] 
     #   == {(29, 14), (31, 11), (30, 14), (32, 11), ...}, 
+    
+    # <self.address_tiles> -- 给定一个字符串地址，返回属于该地址的所有地图块坐标的集合
+    # （这与self.tiles相反，它是给出一个坐标，返回坐标所属的一个字符串地址）。
+    # 这是一个用于查找角色移动路径的优化组件。
+    # self.address_tiles['<spawn_loc>bedroom-2-a'] == {(58, 9)}
+    # self.address_tiles['double studio:recreation:pool table'] 
+    #   == {(29, 14), (31, 11), (30, 14), (32, 11), ...}, 
+    
     self.address_tiles = dict()
     for i in range(self.maze_height):
       for j in range(self.maze_width): 
@@ -254,6 +277,16 @@ class Maze:
     EXAMPLE OUTPUT 
       Given (1600, 384), outputs (50, 12)
     """
+    """
+    把一个像素坐标转为像素所属地图块的坐标
+
+    输入：
+      px_coordinate: 所要查询的像素坐标，以(x, y)的格式
+    输出：
+      tile coordinate (x, y): 与像素坐标对应的地图块坐标
+    示例输出：
+      给定(1600, 384), 输出(50, 12)
+    """
     x = math.ceil(px_coordinate[0]/self.sq_tile_size)
     y = math.ceil(px_coordinate[1]/self.sq_tile_size)
     return (x, y)
@@ -277,6 +310,22 @@ class Maze:
             'events': {('double studio:double studio:bedroom 2:bed',
                        None, None)}} 
     """
+    """
+    给定x, y位置，返回存储在self.tiles相应的地图块的详细信息字典
+    输入：
+      (x, y)格式的地图坐标
+    输出：
+      指定地图块的详细信息字典
+    示例输出：
+      给定(58, 9),
+      返回self.tiles[9][58] = {'world': 'double studio', 
+            'sector': 'double studio', 'arena': 'bedroom 2', 
+            'game_object': 'bed', 'spawning_location': 'bedroom-2-a', 
+            'collision': False,
+            'events': {('double studio:double studio:bedroom 2:bed',
+                       None, None)}} 
+    """
+
     x = tile[0]
     y = tile[1]
     return self.tiles[y][x]
@@ -294,6 +343,18 @@ class Maze:
       The string address for the tile.
     EXAMPLE OUTPUT
       Given tile=(58, 9), and level=arena,
+      "double studio:double studio:bedroom 2"
+    """
+    """
+    获取给定坐标的地图块字符串地址。通过输入一个字符串类型的描述指定地图块级别
+
+    输入：
+      tile: (x, y)格式的地图块坐标
+      level: world, sector, arena, or game object
+    输出：
+      地图块的字符串地址。
+    示例输出：
+      给定 tile=(58, 9), level=arena,
       "double studio:double studio:bedroom 2"
     """
     x = tile[0]
