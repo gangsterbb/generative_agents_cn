@@ -398,6 +398,22 @@ class Maze:
     OUTPUT: 
       nearby_tiles: a list of tiles that are within the radius. 
     """
+    """
+    输入当前的地图块已经可视半径，返回在可视圆内的地图块列表。注意，这个函数在决定
+    地图块是否应在范围内时会查看正方形的边界
+    示例：for vision_r, returns x's. 
+    x x x x x 
+    x x x x x
+    x x P x x 
+    x x x x x
+    x x x x x
+
+    输入：
+      tile: (x, y)格式的地图块坐标。
+      vision_r: 虚拟代理的可视范围半径。
+    输出：
+      nearby_tiles: 在半径范围内的地图块列表
+    """
     left_end = 0
     if tile[0] - vision_r > left_end: 
       left_end = tile[0] - vision_r
@@ -433,6 +449,16 @@ class Maze:
     OUPUT: 
       None
     """
+    """
+    添加一个事件三元组到一个地图块中。
+    输入：
+      curr_event: 当前的事件三元组。
+        e.g., ('double studio:double studio:bedroom 2:bed', None,
+                None)
+      tile: (x, y)格式的地图块坐标。
+    输出：
+      无
+    """
     self.tiles[tile[1]][tile[0]]["events"].add(curr_event)
 
 
@@ -447,6 +473,16 @@ class Maze:
       tile: The tile coordinate of our interest in (x, y) form.
     OUPUT: 
       None
+    """
+    """
+    从地图块中删除事件三元组。
+    输入：
+      curr_event: 当前的事件三元组。
+        e.g., ('double studio:double studio:bedroom 2:bed', None,
+                None)
+      tile: (x, y)格式的地图块坐标。
+    输出：
+    示例输出：
     """
     curr_tile_ev_cp = self.tiles[tile[1]][tile[0]]["events"].copy()
     for event in curr_tile_ev_cp: 
@@ -472,6 +508,15 @@ class Maze:
       tile: The tile coordinate of our interest in (x, y) form.
     OUPUT: 
       None
+    """
+    """
+    从地图块中删除具有主题的事件三元组。
+
+    输入：
+      subject: "Isabella Rodriguez"
+      tile: (x, y)格式的地图块坐标。
+    输出：
+      无
     """
     curr_tile_ev_cp = self.tiles[tile[1]][tile[0]]["events"].copy()
     for event in curr_tile_ev_cp: 

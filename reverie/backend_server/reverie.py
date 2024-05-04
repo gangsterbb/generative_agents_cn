@@ -118,11 +118,16 @@ class ReverieServer:
     # <maze> is the main Maze instance. Note that we pass in the maze_name
     # (e.g., "double_studio") to instantiate Maze. 
     # e.g., Maze("double_studio")
+    
+    # <maze> 是主要的Maze类实例。注意在使用时通过输入maze_name来实例化Maze
+    # e.g., Maze("double_studio")
     self.maze = Maze(reverie_meta['maze_name'])
     
     # <step> denotes the number of steps that our game has taken. A step here
     # literally translates to the number of moves our personas made in terms
     # of the number of tiles. 
+
+    # <step> 表示游戏已经进行的步数。一个step代表了虚拟代理移动的地图块数量。
     self.step = reverie_meta['step']
 
     # SETTING UP PERSONAS IN REVERIE
@@ -131,10 +136,18 @@ class ReverieServer:
     # This dictionary is meant to keep track of all personas who are part of
     # the Reverie instance. 
     # e.g., ["Isabella Rodriguez"] = Persona("Isabella Rodriguezs")
+
+    # 设置人物
+    # <personas>是一个以人物全名为键，人物实例为值的字典。
+    # 这个字典用于保存本Reverie实例中所有的人物。
     self.personas = dict()
     # <personas_tile> is a dictionary that contains the tile location of
     # the personas (!-> NOT px tile, but the actual tile coordinate).
     # The tile take the form of a set, (row, col). 
+    # e.g., ["Isabella Rodriguez"] = (58, 39)
+    
+    # <personas_tile> 是一个保存所有人物的位置的字典(不是像素，而是
+    # 实际的地图块坐标) 地图是一个行列的集合
     # e.g., ["Isabella Rodriguez"] = (58, 39)
     self.personas_tile = dict()
     
@@ -150,7 +163,18 @@ class ReverieServer:
     # # e.g., dict[("Adam Abraham", "Zane Xu")] = "Adam: baba \n Zane:..."
     # self.persona_convo = dict()
 
+    # # <persona_convo_match> 是一个保存了哪两位人物在聊天的字典。它以一个人物的全称
+    # # 为键，另一个在和对方说话的人物全称为值。
+    # # e.g., dict["Isabella Rodriguez"] = ["Maria Lopez"]
+    # self.persona_convo_match = dict()
+
+    # # <persona_convo> 保存了聊天的内容。它以两个人物的名称对为键，字符串的聊天内容为值
+    # # 注意名称对是按字母顺序排序的。
+    # # e.g., dict[("Adam Abraham", "Zane Xu")] = "Adam: baba \n Zane:..."
+    # self.persona_convo = dict()
+
     # Loading in all personas. 
+    # 加载所有人物。
     init_env_file = f"{sim_folder}/environment/{str(self.step)}.json"
     init_env = json.load(open(init_env_file))
     for persona_name in reverie_meta['persona_names']: 
@@ -167,6 +191,9 @@ class ReverieServer:
     # REVERIE SETTINGS PARAMETERS:  
     # <server_sleep> denotes the amount of time that our while loop rests each
     # cycle; this is to not kill our machine. 
+
+    # Reverie设置参数：
+    # <server_sleep> 表示循环休息的时间，目的是防止机器宕机。
     self.server_sleep = 0.1
 
     # SIGNALING THE FRONTEND SERVER: 
@@ -175,6 +202,11 @@ class ReverieServer:
     # used to communicate the code and step information to the frontend. 
     # Note that step file is removed as soon as the frontend opens up the 
     # simulation. 
+
+    # 给前端服务器发送信号：
+    # curr_sim_code.json保存当前仿真的代码, curr_step.json保存当前仿真的步数。
+    # 它们被用于将代码信息和步数信息发送给前端
+    # 注意当前端打开仿真时这个步数文件就会被删除。
     curr_sim_code = dict()
     curr_sim_code["sim_code"] = self.sim_code
     with open(f"{fs_temp_storage}/curr_sim_code.json", "w") as outfile: 
@@ -197,10 +229,21 @@ class ReverieServer:
       None
       * Saves all relevant data to the designated memory directory
     """
+    """
+    保存所有Reverie类的进展-包括Reverie的全局状态和所有人物
+
+    INPUT
+      无
+    OUTPUT
+      None
+      * 保存所有相关数据到指定的记忆文件夹
+    """
     # <sim_folder> points to the current simulation folder.
+    # <sim_folder> 指向当前仿真文件夹
     sim_folder = f"{fs_storage}/{self.sim_code}"
 
     # Save Reverie meta information.
+    # 保存Reverie类元数据
     reverie_meta = dict() 
     reverie_meta["fork_sim_code"] = self.fork_sim_code
     reverie_meta["start_date"] = self.start_time.strftime("%B %d, %Y")
@@ -214,6 +257,7 @@ class ReverieServer:
       outfile.write(json.dumps(reverie_meta, indent=2))
 
     # Save the personas.
+    # 保存人物
     for persona_name, persona in self.personas.items(): 
       save_folder = f"{sim_folder}/personas/{persona_name}/bootstrap_memory"
       persona.save(save_folder)
@@ -234,6 +278,16 @@ class ReverieServer:
       * Saves the spatial memory of the test agent to the path_tester_env.json
         of the temp storage. 
     """
+    """
+    开启路径测试服务，用于生成我们在引导一个角色状态时需要的空间记忆。
+    要使用它，你需要开启服务并进入路径测试模式，然后打开前端浏览器。
+
+    INPUT
+      无
+    OUTPUT
+      无
+      * 保存测试代理的空间记忆到临时存储文件夹中的path_tester_env.json
+    """
     def print_tree(tree): 
       def _print_tree(tree, depth):
         dash = " >" * depth
@@ -252,11 +306,14 @@ class ReverieServer:
 
     # <curr_vision> is the vision radius of the test agent. Recommend 8 as 
     # our default. 
+    # <curr_vision> 是测试代理的可视半径。推荐使用默认值8
     curr_vision = 8
     # <s_mem> is our test spatial memory. 
+    # <s_mem> 是测试的空间记忆。
     s_mem = dict()
 
     # The main while loop for the test agent. 
+    # 测试代理的主while循环
     while (True): 
       try: 
         curr_dict = {}
@@ -267,17 +324,20 @@ class ReverieServer:
             os.remove(tester_file)
           
           # Current camera location
+          # 当前的摄像机位置
           curr_sts = self.maze.sq_tile_size
           curr_camera = (int(math.ceil(curr_dict["x"]/curr_sts)), 
                          int(math.ceil(curr_dict["y"]/curr_sts))+1)
           curr_tile_det = self.maze.access_tile(curr_camera)
 
           # Initiating the s_mem
+          # 初始化s_mem
           world = curr_tile_det["world"]
           if curr_tile_det["world"] not in s_mem: 
             s_mem[world] = dict()
 
           # Iterating throughn the nearby tiles.
+          # 迭代遍历附近的地图块。
           nearby_tiles = self.maze.get_nearby_tiles(curr_camera, curr_vision)
           for i in nearby_tiles: 
             i_det = self.maze.access_tile(i)
@@ -296,6 +356,7 @@ class ReverieServer:
                                                          i_det["game_object"]]
 
         # Incrementally outputting the s_mem and saving the json file. 
+        # 增量输出s_mem并保存json文件。
         print ("= " * 15)
         out_file = fs_temp_storage + "/path_tester_out.json"
         with open(out_file, "w") as outfile: 
@@ -321,7 +382,17 @@ class ReverieServer:
     OUTPUT 
       None
     """
+    """
+    Reverie类的主要后端服务。
+    这个函数检索从前端发来的环境文件，试图理解世界的状态，调用每个人物基于世界的状态
+    做决策，并保存每一步的移动距离。
+    输入：
+      int_counter: 整型数值，保存了这个循环中剩余的步数。
+    输出：
+      无
+    """
     # <sim_folder> points to the current simulation folder.
+    # <sim_folder> 指向当前仿真的文件夹。
     sim_folder = f"{fs_storage}/{self.sim_code}"
 
     # When a persona arrives at a game object, we give a unique event
