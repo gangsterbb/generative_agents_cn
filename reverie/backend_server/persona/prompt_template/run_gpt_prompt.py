@@ -861,18 +861,6 @@ def run_gpt_prompt_pronunciatio(action_description, persona, verbose=False):
   #                     prompt_input, prompt, output)
   
   # return output, [output, prompt, gpt_param, prompt_input, fail_safe]
-
-
-
-
-
-
-
-
-
-
-
-
 def run_gpt_prompt_event_triple(action_description, persona, verbose=False): 
   def create_prompt_input(action_description, persona): 
     if "(" in action_description: 

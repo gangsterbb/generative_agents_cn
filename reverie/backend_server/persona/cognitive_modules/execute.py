@@ -4,6 +4,12 @@ Author: Joon Sung Park (joonspk@stanford.edu)
 File: execute.py
 Description: This defines the "Act" module for generative agents. 
 """
+"""
+作者: 朴俊成(joonspk@stanford.edu)
+
+文件: execute.py
+描述: 定义生成式代理的行为模式。
+"""
 import sys
 import random
 sys.path.append('../../')
@@ -32,14 +38,31 @@ def execute(persona, maze, personas, plan):
   OUTPUT: 
     execution
   """
+  """
+  给定一个计划（动作的字符串地址），执行该计划（实际上是输出人物的地图块坐标路径和
+  下一个坐标）。
+
+  输入：
+    persona：当前<Persona>实例。
+    maze：当前<Maze>实例。
+    personas: 存储小镇中所有角色的字典。
+    plan：存储需要执行的动作字符串地址。它的格式是： "{world}:{sector}:{arena}:
+    {game_objects}". 注意在操作时不能输入负数索引(e.g., [-1])因为在一些情况下
+    后面的地址元素可能没有被初始化。
+  输出：
+  """
   if "<random>" in plan and persona.scratch.planned_path == []: 
     persona.scratch.act_path_set = False
 
   # <act_path_set> is set to True if the path is set for the current action. 
   # It is False otherwise, and means we need to construct a new path. 
+  # 当路径被设置为当前动作时，<act_path_set> 赋值为True，否则赋值为False，此时代表
+  # 需要构造一个新路径
   if not persona.scratch.act_path_set: 
     # <target_tiles> is a list of tile coordinates where the persona may go 
     # to execute the current action. The goal is to pick one of them.
+    # <target_tiles>是一个角色为了执行当前行动可能到达的地图块坐标列表。作用是用于
+    # 选择其中一个坐标执行。
     target_tiles = None
 
     print ('aldhfoaf/????')
