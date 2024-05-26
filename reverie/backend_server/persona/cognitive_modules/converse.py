@@ -4,6 +4,12 @@ Author: Joon Sung Park (joonspk@stanford.edu)
 File: converse.py
 Description: An extra cognitive module for generating conversations. 
 """
+"""
+作者: 朴俊成(joonspk@stanford.edu)
+
+文件: converse.py
+描述: 一个用于生成对话的额外认知模块。
+"""
 import math
 import sys
 import datetime
@@ -75,6 +81,7 @@ def generate_agent_chat(maze,
 
 def agent_chat_v1(maze, init_persona, target_persona): 
   # Chat version optimized for speed via batch generation
+  # 通过批量生成来优化聊天的速度
   curr_context = (f"{init_persona.scratch.name} " + 
               f"was {init_persona.scratch.act_description} " + 
               f"when {init_persona.scratch.name} " + 
@@ -105,6 +112,7 @@ def agent_chat_v1(maze, init_persona, target_persona):
 
 def generate_one_utterance(maze, init_persona, target_persona, retrieved, curr_chat): 
   # Chat version optimized for speed via batch generation
+  # 通过批量生成来优化聊天的速度
   curr_context = (f"{init_persona.scratch.name} " + 
               f"was {init_persona.scratch.act_description} " + 
               f"when {init_persona.scratch.name} " + 
@@ -193,6 +201,7 @@ def generate_summarize_ideas(persona, nodes, question):
 
 def generate_next_line(persona, interlocutor_desc, curr_convo, summarized_idea):
   # Original chat -- line by line generation 
+  # 初始聊天 -- 逐行生成
   prev_convo = ""
   for row in curr_convo: 
     prev_convo += f'{row[0]}: {row[1]}\n'
@@ -217,6 +226,16 @@ def generate_action_event_triple(act_desp, persona):
   OUTPUT: 
     a string of emoji that translates action description.
   EXAMPLE OUTPUT: 
+    "🧈🍞"
+  """
+  """TODO 
+
+  输入: 
+    act_desp: 行为的描述 (e.g., "sleeping")
+    persona: Persona类实例
+  输出: 
+    用于翻译行为描述的表情字符串
+  示例输出: 
     "🧈🍞"
   """
   if debug: print ("GNS FUNCTION: <generate_action_event_triple>")
