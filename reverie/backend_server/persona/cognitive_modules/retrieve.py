@@ -4,6 +4,12 @@ Author: Joon Sung Park (joonspk@stanford.edu)
 File: retrieve.py
 Description: This defines the "Retrieve" module for generative agents. 
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+
+文件：retrieve.py
+描述：它定义了生成式代理的Retrieve模块。
+"""
 import sys
 sys.path.append('../../')
 

@@ -8,6 +8,14 @@ Note (May 1, 2023) -- this is effectively GenerativeAgent class. Persona was
 the term we used internally back in 2022, taking from our Social Simulacra 
 paper.
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+文件：persona.py
+描述：定义Persona类，用于驱动Reverie中的代理
+
+小记 (May 1, 2023) -- 这是实际上的GenerativeAgent类。Persona是我们在2022年内部使用
+的术语，来自我们的Social Simulacra论文
+"""
 import math
 import sys
 import datetime
@@ -32,18 +40,27 @@ class Persona:
     # PERSONA BASE STATE 
     # <name> is the full name of the persona. This is a unique identifier for
     # the persona within Reverie. 
+    
+    # PERSONA 基本状态
+    # <name>是指persona的全名。这是Reverie中角色的唯一标识符。
     self.name = name
 
     # PERSONA MEMORY 
     # If there is already memory in folder_mem_saved, we load that. Otherwise,
     # we create new memory instances. 
     # <s_mem> is the persona's spatial memory. 
+
+    # PERSONA 记忆
+    # 如果在folder_mem_saved中有记忆，将优先加载此记忆，否则就创建新的记忆实例。
+    # <s_mem>是角色的空间记忆。
     f_s_mem_saved = f"{folder_mem_saved}/bootstrap_memory/spatial_memory.json"
     self.s_mem = MemoryTree(f_s_mem_saved)
     # <s_mem> is the persona's associative memory. 
+    # <s_mem>是角色的联想记忆。
     f_a_mem_saved = f"{folder_mem_saved}/bootstrap_memory/associative_memory"
     self.a_mem = AssociativeMemory(f_a_mem_saved)
     # <scratch> is the persona's scratch (short term memory) space. 
+    # <scratch> 是角色的短时记忆空间。
     scratch_saved = f"{folder_mem_saved}/bootstrap_memory/scratch.json"
     self.scratch = Scratch(scratch_saved)
 
@@ -57,7 +74,21 @@ class Persona:
     OUTPUT: 
       None
     """
+    """
+    保存角色当前的状态(i.e., 记忆)
+
+    输入: 
+      save_folder:保存角色状态的文件夹名称
+    输出: 
+      无
+    """
     # Spatial memory contains a tree in a json format. 
+    # e.g., {"double studio": 
+    #         {"double studio": 
+    #           {"bedroom 2": 
+    #             ["painting", "easel", "closet", "bed"]}}}
+
+    # 空间记忆包含一个json格式的树。
     # e.g., {"double studio": 
     #         {"double studio": 
     #           {"bedroom 2": 
@@ -68,12 +99,19 @@ class Persona:
     # Associative memory contains a csv with the following rows: 
     # [event.type, event.created, event.expiration, s, p, o]
     # e.g., event,2022-10-23 00:00:00,,Isabella Rodriguez,is,idle
+
+    # 关联记忆包含是指有着如下行数据的csv：
+    # [event.type, event.created, event.expiration, s, p, o]
+    # e.g., event,2022-10-23 00:00:00,,Isabella Rodriguez,is,idle
+
     f_a_mem = f"{save_folder}/associative_memory"
     self.a_mem.save(f_a_mem)
 
     # Scratch contains non-permanent data associated with the persona. When 
     # it is saved, it takes a json form. When we load it, we move the values
     # to Python variables. 
+
+    # 划痕存储与角色关联的非持久性数据，并以json格式保存。在加载的时候把它的值保存到python变量中。
     f_scratch = f"{save_folder}/scratch.json"
     self.scratch.save(f_scratch)
 
@@ -104,6 +142,24 @@ class Persona:
         See associative_memory.py -- but to get you a sense of what it 
         receives as its input: "s, p, o, desc, persona.scratch.curr_time"
     """
+    """
+    这个函数接收当前的迷宫，然后返回角色周边发生的事件。要注意的是，角色感知被两个
+    重要的超参数控制：（1）att_bandwith和（2）retention。
+
+    首先，<att_bandwith>决定着角色能够感知的周围事件数量。假设有10个发生在角色可
+    视半径内的事件-感知全部10个事件可能太多了。所以，角色感知最接近<att_bandwith>
+    的事件数量以免有太多的事件要处理。
+
+    其次，角色不希望在一个时间步骤内感知和考虑相同的事件。这就是<retention>的作用了
+    人物角色的记忆是有时间顺序的。所以如果角色的记忆包含了最近一次记忆中发生的当前周
+    围事件，那么就没有必要再去感知它了。
+    输入：
+      maze：小镇当前的<Maze>实例。
+    输出：
+      一个被感知的新<ConceptNode>列表。
+      查看 associative_memory.py -- 为了让你了解它接收到的输入：
+      "s, p, o, desc, persona.scratch.curr_time"
+    """
     return perceive(self, maze)
 
 
@@ -119,6 +175,15 @@ class Persona:
       retrieved: dictionary of dictionary. The first layer specifies an event,
                  while the latter layer specifies the "curr_event", "events", 
                  and "thoughts" that are relevant.
+    """
+    """
+    这个函数以被角色感知的事件作为输入，并把角色在计划时需要考虑作为上下文的想法事件和
+    想法集合返回。
+
+    输入：
+      perceive: 一个被感知且是新的<ConceptNode>列表
+    输出：
+      retrieved: 字典的字典。第一层表示一个事件，第二层表示相关的当前事件、事件和想法。
     """
     return retrieve(self, perceived)
 
@@ -144,6 +209,21 @@ class Persona:
                  and "thoughts" that are relevant.
     OUTPUT 
       The target action address of the persona (persona.scratch.act_address).
+    """
+    """
+    链条的主认知函数。它接收恢复记忆、感知、迷宫和第一天的状态来构建角色的长短期计划。
+
+    输入：
+      maze：小镇当前的<Maze>类实例。
+      personas：一个字典，以所有角色名作为键，Persona实例作为值。
+      new_day：可以接收以下三种值。
+      1) <Boolean> False -- 表示它不是新一天的循环 (如果它是，则需要调用角色的
+         长期计划序列). 
+      2) <String> "First day" -- 它就是变量名的含义，仿真的开始，所以它不仅是
+         新的一天，也是第一天。 
+      3) <String> "New day" -- 它是新的一天
+    输出：
+      角色的目标行动地址（persona.scratch.act_address）。
     """
     return plan(self, maze, personas, new_day, retrieved)
 

@@ -4,6 +4,12 @@ Author: Joon Sung Park (joonspk@stanford.edu)
 File: reflect.py
 Description: This defines the "Reflect" module for generative agents. 
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+
+文件：reflect.py
+描述：它定义了生成式代理的Reflect模块。
+"""
 import sys
 sys.path.append('../../')
 
@@ -66,6 +72,15 @@ def generate_action_event_triple(act_desp, persona):
   EXAMPLE OUTPUT: 
     "🧈🍞"
   """
+  """
+  输入：
+    act_desp：行为的描述(e.g., "sleeping")
+    persona：Persona类实例
+  输出：
+    表示行为描述的表情字符串。
+  示例输出：
+"🧈🍞"
+  """
   if debug: print ("GNS FUNCTION: <generate_action_event_triple>")
   return run_gpt_prompt_event_triple(act_desp, persona)[0]
 
@@ -106,14 +121,27 @@ def run_reflect(persona):
   Output: 
     None
   """
+  """
+  运行真正反思的地方。生成关注点，检索任何相关的节点，并生成想法和见解。
+  输入：
+    persona：当前Persona对象
+  输出：
+    无
+  """
   # Reflection requires certain focal points. Generate that first. 
+  # 反思要求确切的关注点。先生成关注点。
   focal_points = generate_focal_points(persona, 3)
   # Retrieve the relevant Nodes object for each of the focal points. 
   # <retrieved> has keys of focal points, and values of the associated Nodes. 
+  
+  # 为每个关注点生成相关的节点对象。
+  # <retrieved>的键是关注点，值是相关节点。
   retrieved = new_retrieve(persona, focal_points)
 
   # For each of the focal points, generate thoughts and save it in the 
   # agent's memory. 
+
+  # 对每个关注点，生成想法并保存到代理的记忆中。
   for focal_pt, nodes in retrieved.items(): 
     xx = [i.embedding_key for i in nodes]
     for xxx in xx: print (xxx)
@@ -146,6 +174,17 @@ def reflection_trigger(persona):
     True if we are running a new reflection. 
     False otherwise. 
   """
+  """
+  给定当前的角色，确定角色是否应该运行反思。
+
+  我们当前的实现检查新的重要性度量的总和是否达到设置（超参数）的阈值。
+
+  输入：
+    persona：当前Persona对象
+  输出：
+    如果正在运行一次新反思则返回True，否则返回False
+
+  """
   print (persona.scratch.name, "persona.scratch.importance_trigger_curr::", persona.scratch.importance_trigger_curr)
   print (persona.scratch.importance_trigger_max)
 
@@ -164,6 +203,14 @@ def reset_reflection_counter(persona):
   Output: 
     None
   """
+  """
+  重置所有反思触发器使用的计数器。
+
+  输入：
+    persona：当前Persona对象
+  输出：
+    无
+  """
   persona_imt_max = persona.scratch.importance_trigger_max
   persona.scratch.importance_trigger_curr = persona_imt_max
   persona.scratch.importance_ele_n = 0
@@ -179,6 +226,14 @@ def reflect(persona):
     persona: Current Persona object
   Output: 
     None
+  """
+  """
+  角色的主要反思模块。首先检查是否达到触发条件，如果是的话，运行反思并重置所有相关的计数器。
+  
+  输入：
+    persona：当前Persona对象
+  输出：
+    无
   """
   if reflection_trigger(persona): 
     run_reflect(persona)
