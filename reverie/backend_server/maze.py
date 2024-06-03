@@ -522,37 +522,3 @@ class Maze:
     for event in curr_tile_ev_cp: 
       if event[0] == subject:  
         self.tiles[tile[1]][tile[0]]["events"].remove(event)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

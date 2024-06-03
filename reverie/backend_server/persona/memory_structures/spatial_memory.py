@@ -5,6 +5,12 @@ File: spatial_memory.py
 Description: Defines the MemoryTree class that serves as the agents' spatial
 memory that aids in grounding their behavior in the game world. 
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+
+文件：spatial_memory.py
+描述：定义了MemoryTree类，作为代理的空间记忆，帮助他们在游戏世界中建立行为基础。
+"""
 import json
 import sys
 sys.path.append('../../')
@@ -56,6 +62,18 @@ class MemoryTree:
     EXAMPLE STR OUTPUT
       "bedroom, kitchen, dining room, office, bathroom"
     """
+    """
+    返回一个字符串概述，其中包含人物角色在当前领域内可以访问的所有场所。
+    请注意，有些地方是给定角色不能进入的。这种信息是在persona表中提供的
+    在这个函数中计算这个信息。
+
+    输入：
+      无
+    输出：
+      角色可以访问的所有领域的摘要字符串。
+    示例字符串输出：
+      "bedroom, kitchen, dining room, office, bathroom"
+    """
     x = ", ".join(list(self.tree[curr_world].keys()))
     return x
 
@@ -73,6 +91,18 @@ class MemoryTree:
     OUTPUT 
       A summary string of all the arenas that the persona can access. 
     EXAMPLE STR OUTPUT
+      "bedroom, kitchen, dining room, office, bathroom"
+    """
+    """
+    返回一个字符串概述，其中包含人物角色在当前领域内可以访问的所有场所。
+    请注意，有些地方是给定角色不能进入的。这种信息是在persona表中提供的在这个函数中
+    计算这个信息。
+
+    输入：
+      无
+    输出：
+      角色可以访问的所有领域的摘要字符串。
+    示例字符串输出：
       "bedroom, kitchen, dining room, office, bathroom"
     """
     curr_world, curr_sector = sector.split(":")
@@ -95,6 +125,12 @@ class MemoryTree:
       str list of all accessible game objects in the gmae arena. 
     EXAMPLE STR OUTPUT
       "phone, charger, bed, nightstand"
+    """
+    """
+    获取竞技场中所有可访问的游戏对象的字符串列表。如果temp_address是特定的，则返回
+    在场所内可达到的对象。如果不是的话，则返回当前角色所在的实体。
+    
+
     """
     curr_world, curr_sector, curr_arena = arena.split(":")
 

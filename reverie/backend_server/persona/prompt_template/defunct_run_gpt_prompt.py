@@ -7,6 +7,14 @@ interface with the safe_generate_response function.
 
 Note (March 10, 2023) -- Defunct
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+
+文件：defunct_run_gpt_prompt.py
+描述：定义所有运行gpt提示词函数。这些函数直接与safe_generate_response函数连接。
+
+小记 (March 10, 2023) -- 不再使用了
+"""
 import re
 import datetime
 import sys
@@ -28,6 +36,15 @@ def get_random_alphanumeric(i=6, j=6):
   OUTPUT: 
     an alpha numeric str with the length of somewhere between i and j.
   """
+  """
+  返回一个随机的alpha数字强度，其长度介于i和j之间。
+
+  输入：
+    i：长度最小值
+    j：长度最大值
+  输出：
+    一个表示长度的数字字符串，它的长度在i到j之间。
+  """
   k = random.randint(i, j)
   x = ''.join(random.choices(string.ascii_letters + string.digits, k=k))
   return x
@@ -46,6 +63,14 @@ def run_gpt_prompt_wake_up_hour(persona, test_input=None, verbose=False):
     persona: The Persona class instance 
   OUTPUT: 
     integer for the wake up hour.
+  """
+  """
+  给定一个角色，返回一个表示角色醒来时间的小时整数。
+
+  输入：
+    角色：Persona类实例
+  输出：
+    醒来的小时整数。
   """
   def create_prompt_input(persona, test_input=None): 
     if test_input: return test_input
@@ -100,6 +125,12 @@ def run_gpt_prompt_daily_plan(persona,
     persona: The Persona class instance 
   OUTPUT: 
     a list of daily actions in broad strokes.
+  """
+  """
+  基本上横跨一个天的长期计划。返回角色今天将执行的一系列行为。通常按以下格式展示：
+  'wake up and complete the morning routine at 6:00 am', 
+  'eat breakfast at 7:00 am',.. 
+  注意，这些操作没有带着句号。
   """
   def create_prompt_input(persona, wake_up_hour, test_input=None):
     if test_input: return test_input
@@ -252,13 +283,6 @@ def run_gpt_prompt_generate_hourly_schedule(persona,
     
   return output, [output, prompt, gpt_param, prompt_input, fail_safe]
 
-
-
-
-
-
-
-
 def run_gpt_prompt_task_decomp(persona, 
                                task, 
                                duration, 
@@ -272,7 +296,10 @@ def run_gpt_prompt_task_decomp(persona,
     planning on waking up and doing her morning routine, 
     and from 07:00am ~08:00am, Maeve is planning on having breakfast.  
     """
-      
+    """
+    今天是6月25日。从早上00:00 ~ 06:00，Maeve打算睡觉；06:00 ~ 07:00，Maeve
+    打算起床并执行她的日常；从07:00am ~08:00am，Maeve打算吃早餐。
+    """
     curr_f_org_index = persona.scratch.get_f_daily_schedule_hourly_org_index()
     all_indices = []
     # if curr_f_org_index > 0: 
@@ -348,6 +375,8 @@ def run_gpt_prompt_task_decomp(persona,
     
     # TODO -- now, you need to make sure that this is the same as the sum of 
     #         the current action sequence. 
+
+    # TODO -- 现在，你需要确保这个与当前行为序列的总和相同
     curr_min_slot = [["dummy", -1],] # (task_name, task_index)
     for count, i in enumerate(cr): 
       i_task = i[0] 
@@ -380,6 +409,7 @@ def run_gpt_prompt_task_decomp(persona,
 
   def __func_validate(gpt_response, prompt=""): 
     # TODO -- this sometimes generates error 
+    # TODO -- 这里有时会产生错误
     try: 
       __func_clean_up(gpt_response)
     except: 
@@ -406,6 +436,8 @@ def run_gpt_prompt_task_decomp(persona,
 
   # TODO THERE WAS A BUG HERE... 
   # This is for preventing overflows...
+  # 这里有个bug
+  # 这里是为了避免溢出
   """
   File "/Users/joonsungpark/Desktop/Stanford/Projects/
   generative-personas/src_exploration/reverie_simulation/

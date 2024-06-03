@@ -4,6 +4,12 @@ Author: Joon Sung Park (joonspk@stanford.edu)
 File: print_prompt.py
 Description: For printing prompts when the setting for verbose is set to True.
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+
+文件：print_prompt.py
+描述：在verbose被设置为True时打印提示信息。
+"""
 import sys
 sys.path.append('../')
 

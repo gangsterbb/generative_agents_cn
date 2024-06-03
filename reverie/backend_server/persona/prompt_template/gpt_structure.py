@@ -4,6 +4,12 @@ Author: Joon Sung Park (joonspk@stanford.edu)
 File: gpt_structure.py
 Description: Wrapper functions for calling OpenAI APIs.
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+
+文件：gpt_structure.py
+描述：调用OpenAI API的封装函数。
+"""
 import json
 import random
 import openai
@@ -40,7 +46,15 @@ def GPT4_request(prompt):
                    the parameter and the values indicating the parameter 
                    values.   
   RETURNS: 
-    a str of GPT-3's response. 
+    a str of GPT-4's response. 
+  """
+  """
+  给定一串提示和GPT参数字典，发送一个请求到OpenAI服务器并返回响应。
+  参数：
+    prompt：一串提示词
+    gpt_parameter：一个Python字典，其中键表示参数的名称，值表示参数的取值。
+  返回：
+    一个GPT-4的响应字符串。
   """
   temp_sleep()
 
@@ -67,6 +81,14 @@ def ChatGPT_request(prompt):
                    values.   
   RETURNS: 
     a str of GPT-3's response. 
+  """
+  """
+  给定一串提示和GPT参数字典，发送一个请求到OpenAI服务器并返回响应。
+  参数：
+    prompt：一串提示词
+    gpt_parameter：一个Python字典，其中键表示参数的名称，值表示参数的取值。
+  返回：
+    一个GPT-3的响应字符串。
   """
   # temp_sleep()
   try: 
@@ -206,6 +228,14 @@ def GPT_request(prompt, gpt_parameter):
   RETURNS: 
     a str of GPT-3's response. 
   """
+  """
+  给定一串提示和GPT参数字典，发送一个请求到OpenAI服务器并返回响应。
+  参数：
+    prompt：一串提示词
+    gpt_parameter：一个Python字典，其中键表示参数的名称，值表示参数的取值。
+  返回：
+    一个GPT-3的响应字符串。
+  """
   temp_sleep()
   try: 
     response = openai.Completion.create(
@@ -237,6 +267,16 @@ def generate_prompt(curr_input, prompt_lib_file):
     prompt_lib_file: the path to the promopt file. 
   RETURNS: 
     a str prompt that will be sent to OpenAI's GPT server.  
+  """
+  """
+  接收当前输入(例如你想分类的评论) 和一个提示词文件的路径。这个提示文件包含要使用的
+  原始字符串提示，这些提示包含以下子字符串： !<INPUT>! -- 这个函数将该字符串替换为
+  实际的curr_input，以生成将发送到GPT3服务器的最终提示。
+  参数：
+    curr_input：希望输入的输入词（如果输入超过一个，该参数可以为列表）
+    prompt_lib_file：提示文件的路径。
+  返回：
+    一个将会被发送到OpenAI服务器的字符串提示。
   """
   if type(curr_input) == type("string"): 
     curr_input = [curr_input]

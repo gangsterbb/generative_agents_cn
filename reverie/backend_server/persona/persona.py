@@ -247,6 +247,22 @@ class Persona:
         writing her next novel (editing her novel) 
         @ double studio:double studio:common room:sofa
     """
+    """
+    这个函数接收代理当前的计划，然后输出一个具体的执行过程(使用什么对象，并移
+    动到哪个位置)
+
+    输入：
+      maze：当前世界的<Maze>类示例
+      personas：一个字典，以所有角色的名字为键，Persona类实例为值。
+      plan：角色的目标行为地址（persona.scratch.act_address）
+    输出:
+      execution：一个元组集合，存储了以下的内容：
+      <next_tile>是一个x，y坐标。例如，(58, 9)
+      <pronunciatio>是一个表情。
+      <description>是动作的一个字符串描述。例如，写下她的下一篇小说（
+      编辑她的小说）
+      @ double studio:double studio:common room:sofa
+    """
     return execute(self, maze, personas, plan)
 
 
@@ -258,6 +274,14 @@ class Persona:
       None
     OUTPUT: 
       None
+    """
+    """
+    回忆角色的记忆然后基于回忆创建新想法。
+
+    输入：
+      无
+    输出：
+      无
     """
     reflect(self)
 
@@ -281,13 +305,33 @@ class Persona:
         writing her next novel (editing her novel) 
         @ double studio:double studio:common room:sofa
     """
+    """
+    这个函数是主要序列被调用的主要感知函数。
+
+    输入：
+      maze：当前世界的Maze类。
+      personas：一个字典，以所有角色的名字为键，Persona类实例为值。
+      curr_tile：一个元组，表示角色的当前地图位置坐标。例如：(58, 39)
+      curr_time：表示游戏当前时间的日期时间实例
+    输出：
+      execution：一个元组集合，存储了以下的内容：
+      <next_tile>是一个x，y坐标。例如，(58, 9)
+      <pronunciatio>是一个表情。
+      <description>是动作的一个字符串描述。例如，写下她的下一篇小说（
+      编辑她的小说）
+      @ double studio:double studio:common room:sofa
+    """
     # Updating persona's scratch memory with <curr_tile>. 
+    # 用<curr_tile>更新角色的临时记忆。
     self.scratch.curr_tile = curr_tile
 
     # We figure out whether the persona started a new day, and if it is a new
     # day, whether it is the very first day of the simulation. This is 
     # important because we set up the persona's long term plan at the start of
     # a new day. 
+
+    # 判断角色是否开启新的一天，如果是新的一天，则再判断是否为仿真开启的第一天。这很重要
+    # 因为我们在第一天时生成角色的长期计划。
     new_day = False
     if not self.scratch.curr_time: 
       new_day = "First day"
@@ -297,6 +341,7 @@ class Persona:
     self.scratch.curr_time = curr_time
 
     # Main cognitive sequence begins here. 
+    # 主要的感知序列在这里开始。
     perceived = self.perceive(maze)
     retrieved = self.retrieve(perceived)
     plan = self.plan(maze, personas, new_day, retrieved)
@@ -308,6 +353,13 @@ class Persona:
     # <description> is a string description of the movement. e.g., 
     #   writing her next novel (editing her novel) 
     #   @ double studio:double studio:common room:sofa
+
+    # execution：一个元组集合，存储了以下的内容：
+    # <next_tile>是一个x，y坐标。例如，(58, 9)
+    # <pronunciatio>是一个表情。
+    # <description>是动作的一个字符串描述。例如，写下她的下一篇小说（
+    # 编辑她的小说）
+    # @ double studio:double studio:common room:sofa
     return self.execute(maze, personas, plan)
 
 

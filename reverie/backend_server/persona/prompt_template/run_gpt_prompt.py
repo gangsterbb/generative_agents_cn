@@ -5,6 +5,12 @@ File: run_gpt_prompt.py
 Description: Defines all run gpt prompt functions. These functions directly
 interface with the safe_generate_response function.
 """
+"""
+作者：朴俊成 (joonspk@stanford.edu)
+
+文件：run_gpt_prompt.py
+描述：定义所有运行gpt提示的函数。这些函数直接实现于safe_generate_response函数。
+"""
 import re
 import datetime
 import sys
@@ -27,6 +33,9 @@ def get_random_alphanumeric(i=6, j=6):
   OUTPUT: 
     an alpha numeric str with the length of somewhere between i and j.
   """
+  """
+  返回一个长度在i和j之间的随机字母数字强度（字符串）。
+  """
   k = random.randint(i, j)
   x = ''.join(random.choices(string.ascii_letters + string.digits, k=k))
   return x
@@ -45,6 +54,14 @@ def run_gpt_prompt_wake_up_hour(persona, test_input=None, verbose=False):
     persona: The Persona class instance 
   OUTPUT: 
     integer for the wake up hour.
+  """
+  """
+  给定角色，返回角色起床的整时数
+
+  输入：
+    persona：Persona类实例
+  输出：
+    起床整点数的整数
   """
   def create_prompt_input(persona, test_input=None): 
     if test_input: return test_input
@@ -99,6 +116,17 @@ def run_gpt_prompt_daily_plan(persona,
     persona: The Persona class instance 
   OUTPUT: 
     a list of daily actions in broad strokes.
+  """
+  """
+  基本上跨越一整天的长时计划。返回角色今天将执行的行为列表。通常按以下格式存储：
+  '早上6点起床并完成晨规',
+  '早上7点吃早餐',..
+  注意行为是即时性地加载的。
+
+  输入：
+    persona：Persona类实例
+  输出：
+    大致上的日常行为列表。
   """
   def create_prompt_input(persona, wake_up_hour, test_input=None):
     if test_input: return test_input
@@ -307,7 +335,12 @@ def run_gpt_prompt_task_decomp(persona,
     planning on waking up and doing her morning routine, 
     and from 07:00am ~08:00am, Maeve is planning on having breakfast.  
     """
-      
+    
+    """
+    今天是6月25日。从早上00:00 ~ 06:00，Maeve打算睡觉；06:00 ~ 07:00，Maeve
+    打算起床并执行她的日常；从07:00am ~08:00am，Maeve打算吃早餐。
+    """
+    
     curr_f_org_index = persona.scratch.get_f_daily_schedule_hourly_org_index()
     all_indices = []
     # if curr_f_org_index > 0: 
