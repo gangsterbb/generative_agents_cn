@@ -76,8 +76,9 @@ class ReverieServer:
     # 修改reverie/meta/json的分叉变量。
     self.sim_code = sim_code
     sim_folder = f"{fs_storage}/{self.sim_code}"
-    copyanything(fork_folder, sim_folder)
+    copyanything(fork_folder, sim_folder) # 复制原文件夹fork_folder的所有内容到新文件夹sim_folder
 
+    # 读取并修改meta.json的fork_sim_code变量，表示是基于哪个仿真实例分裂出来的
     with open(f"{sim_folder}/reverie/meta.json") as json_file:  
       reverie_meta = json.load(json_file)
 
@@ -94,7 +95,7 @@ class ReverieServer:
     # e.g., ...strptime(June 25, 2022, "%B %d, %Y")
     
     # 加载REVERIE全局变量
-    # Reverie的开启日期：<start_datetime>是Reverie实例的开启日期。一旦它被初始化了
+    # Reverie初始化的日期：<start_datetime>是Reverie实例的初始化日期。一旦它被初始化了
     # 它就不应该被修改。它接收如下字符串格式的日期：
     # "June 25, 2022"
     # 例子： ...strptime(June 25, 2022, "%B %d, %Y")
@@ -174,17 +175,19 @@ class ReverieServer:
     # self.persona_convo = dict()
 
     # Loading in all personas. 
-    # 加载所有人物。
+    # 加载所有人物,每一个step保存在一个json中，如0.json，此文件存储每个角色当前所在的地图和x，y位置
     init_env_file = f"{sim_folder}/environment/{str(self.step)}.json"
     init_env = json.load(open(init_env_file))
     for persona_name in reverie_meta['persona_names']: 
-      persona_folder = f"{sim_folder}/personas/{persona_name}"
-      p_x = init_env[persona_name]["x"]
-      p_y = init_env[persona_name]["y"]
+      persona_folder = f"{sim_folder}/personas/{persona_name}" # 获取当前角色存储的文件夹
+      p_x = init_env[persona_name]["x"] # 获取角色当前的x坐标
+      p_y = init_env[persona_name]["y"] # 获取角色当前的y坐标
       curr_persona = Persona(persona_name, persona_folder)
 
-      self.personas[persona_name] = curr_persona
-      self.personas_tile[persona_name] = (p_x, p_y)
+      
+      self.personas[persona_name] = curr_persona # 存储人物实例
+      self.personas_tile[persona_name] = (p_x, p_y) # 存储人物当前的位置
+       # 获取人物当前执行的事件及其描述
       self.maze.tiles[p_y][p_x]["events"].add(curr_persona.scratch
                                               .get_curr_event_and_desc())
 
@@ -204,7 +207,7 @@ class ReverieServer:
     # simulation. 
 
     # 给前端服务器发送信号：
-    # curr_sim_code.json保存当前仿真的代码, curr_step.json保存当前仿真的步数。
+    # curr_sim_code.json保存当前仿真码, 仿真码是一个自定义的值，curr_step.json保存当前仿真的步数。
     # 它们被用于将代码信息和步数信息发送给前端
     # 注意当前端打开仿真时这个步数文件就会被删除。
     curr_sim_code = dict()
@@ -243,7 +246,7 @@ class ReverieServer:
     sim_folder = f"{fs_storage}/{self.sim_code}"
 
     # Save Reverie meta information.
-    # 保存Reverie类元数据
+    # 保存Reverie类元数据到文件，会覆盖原文件的内容
     reverie_meta = dict() 
     reverie_meta["fork_sim_code"] = self.fork_sim_code
     reverie_meta["start_date"] = self.start_time.strftime("%B %d, %Y")
@@ -257,7 +260,7 @@ class ReverieServer:
       outfile.write(json.dumps(reverie_meta, indent=2))
 
     # Save the personas.
-    # 保存人物
+    # 保存每一个人物
     for persona_name, persona in self.personas.items(): 
       save_folder = f"{sim_folder}/personas/{persona_name}/bootstrap_memory"
       persona.save(save_folder)
@@ -833,55 +836,3 @@ if __name__ == '__main__':
 
   rs = ReverieServer(origin, target)
   rs.open_server()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
